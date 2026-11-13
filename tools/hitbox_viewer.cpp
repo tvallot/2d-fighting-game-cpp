@@ -12,7 +12,7 @@ struct Vector2D {
     int posx, posy;
 };
 
-const int targetFPS = 60; // FPS du jeu
+const int targetFPS = 60; // Target frame rate
 
 struct Box {
     int posX;
@@ -1016,12 +1016,12 @@ std::vector<std::string> animationName = {
 
 bool initSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "Erreur d'initialisation de SDL : " << SDL_GetError() << std::endl;
+        std::cerr << "SDL initialization error: " << SDL_GetError() << std::endl;
         return false;
     }
 
     if (IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG) {
-        std::cerr << "Erreur d'initialisation de SDL_image : " << IMG_GetError() << std::endl;
+        std::cerr << "SDL_image initialization error: " << IMG_GetError() << std::endl;
         SDL_Quit();
         return false;
     }
@@ -1032,7 +1032,7 @@ bool initSDL() {
 SDL_Texture* loadTexture(SDL_Renderer* renderer, const char* filePath) {
     SDL_Surface* surface = IMG_Load(filePath);
     if (!surface) {
-        std::cerr << "Erreur de chargement de l'image : " << IMG_GetError() << std::endl;
+        std::cerr << "Image loading error: " << IMG_GetError() << std::endl;
         return nullptr;
     }
 
@@ -1056,7 +1056,7 @@ void changeStatShowBox(bool& isBoxShow) {
     else isBoxShow = true;
 }
 
-// Fonction specifique a la position Stance du personnage
+// Stance only: sometimes play the alternative idle animation
 bool isFancyStance() {
     std::srand(std::time(0));
     int randomNumber = std::rand() % 100;
@@ -1070,16 +1070,16 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("Animation de Sprites depuis Atlas", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
+    SDL_Window* window = SDL_CreateWindow("Hitbox viewer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
     if (!window) {
-        std::cerr << "Erreur de création de la fenêtre : " << SDL_GetError() << std::endl;
+        std::cerr << "Window creation error: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return -1;
     }
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); // SDL_RENDERER_PRESENTVSYNC
     if (!renderer) {
-        std::cerr << "Erreur de création du renderer : " << SDL_GetError() << std::endl;
+        std::cerr << "Renderer creation error: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(window);
         SDL_Quit();
         return -1;
@@ -1095,7 +1095,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    // Utilisation d'un itérateur pour parcourir la map
+    // Iterator over the sprite map
     auto currentSprite = spritesSheet->begin();
 
     std::string defaultSpriteName = "Stance-";
@@ -1154,9 +1154,9 @@ int main(int argc, char* argv[]) {
         }
 
 
-        // Définir la couleur de fond (gris clair)
+        // Background colour (light grey)
         SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
-        // Effacer l'écran avec la couleur de fond
+        // Clear the screen
         SDL_RenderClear(renderer);
         /*
         if (index > maxIndex - 1) {
@@ -1175,7 +1175,7 @@ int main(int argc, char* argv[]) {
             }
         }*/
 
-        // Accéder au sprite avec la clé "Stance-0"
+        // Get the current sprite (e.g. "Stance-0")
         std::string key = currentSpriteName + std::to_string(index);
         auto it = spritesSheet->find(key);
         const RectangleFromAtlas& currentSpriteRect = it->second;
@@ -1202,8 +1202,8 @@ int main(int argc, char* argv[]) {
         std::cout << currentSpriteName << std::endl;
         SDL_RenderCopy(renderer, atlasTexture, &srcRect, &destRect);
 
-        if (showBox) { // Afficher la collideBox           
-            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); // SDL_BLENDMODE_BLEND pour la transparence
+        if (showBox) { // Draw the collide box           
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); // Enable transparency
 
             SDL_Rect collideBoxOutline = {
                 posX + currentSpriteRect.collideBox.posX * zoomFactor,
@@ -1212,12 +1212,12 @@ int main(int argc, char* argv[]) {
                 currentSpriteRect.collideBox.height * zoomFactor
             };
 
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Vert opaque pour les bords
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);  // Opaque outline
             SDL_RenderDrawRect(renderer, &collideBoxOutline);
 
-            // Dessiner l'intérieur transparent du rectangle
+            // Draw the transparent fill
             SDL_Rect collideBoxFill = { collideBoxOutline.x + 1, collideBoxOutline.y + 1, collideBoxOutline.w - 2, collideBoxOutline.h - 2 };
-            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 128);  // Vert semi-transparent pour l'intérieur
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 128);  // Semi-transparent fill
             SDL_RenderFillRect(renderer, &collideBoxFill);
 
             SDL_Rect hitBoxOutline = {
@@ -1227,12 +1227,12 @@ int main(int argc, char* argv[]) {
                 currentSpriteRect.hitBox.height * zoomFactor
             };
 
-            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);  // Vert opaque pour les bords
+            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);  // Opaque outline
             SDL_RenderDrawRect(renderer, &hitBoxOutline);
 
-            // Dessiner l'intérieur transparent du rectangle
+            // Draw the transparent fill
             SDL_Rect hitBoxFill = { hitBoxOutline.x + 1, hitBoxOutline.y + 1, hitBoxOutline.w - 2, hitBoxOutline.h - 2 };
-            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 128);  // Vert semi-transparent pour l'intérieur
+            SDL_SetRenderDrawColor(renderer, 0, 0, 255, 128);  // Semi-transparent fill
             SDL_RenderFillRect(renderer, &hitBoxFill);
 
             SDL_Rect hurtBoxOutline = {
@@ -1242,27 +1242,27 @@ int main(int argc, char* argv[]) {
                 currentSpriteRect.hurtBox.height * zoomFactor
             };
 
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Vert opaque pour les bords
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Opaque outline
             SDL_RenderDrawRect(renderer, &hurtBoxOutline);
 
-            // Dessiner l'intérieur transparent du rectangle
+            // Draw the transparent fill
             SDL_Rect hurtBoxFill = { hurtBoxOutline.x + 1, hurtBoxOutline.y + 1, hurtBoxOutline.w - 2, hurtBoxOutline.h - 2 };
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128);  // Vert semi-transparent pour l'intérieur
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128);  // Semi-transparent fill
             SDL_RenderFillRect(renderer, &hurtBoxFill);
         }
 
         SDL_RenderPresent(renderer);
 
-        // Gestion de l'animation
+        // Animation
         frameTime += deltaTime;
         if (frameTime >= currentSpriteRect.timeDelay) {
-            ++index; // Passer à la frame suivante
+            ++index; // Next frame
 
-            // Réinitialisez le temps pour la prochaine frame
+            // Reset the timer for the next frame
             frameTime = 0;
         }
 
-        // Mettre à jour lastTime pour le prochain tour de boucle
+        // Update lastTime for the next iteration
         lastTime = currentTime;
     }
 

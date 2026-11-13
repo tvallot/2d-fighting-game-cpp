@@ -49,7 +49,7 @@ void Menu::initialize(){
 }
 
 //updates
-void Menu::updateEvent(int event){ //changer les keycode de eventmanager a game
+void Menu::updateEvent(int event){ // TODO: move keycode handling from the event manager to Game
     switch (event){
         case 1:
             if (m_menuIndex == 0) {
@@ -225,16 +225,16 @@ void Menu::update(){
     }
     //Menu Keybinds Player 1
     if(m_menuCurrentItems == m_menuItems[7]){
-        if (m_menuIndex == 0){//touche ???
+        if (m_menuIndex == 0){// TODO: assign a key
             
         }
-        if (m_menuIndex == 1){//touche ???
+        if (m_menuIndex == 1){// TODO: assign a key
 
         }
-        if (m_menuIndex == 2){//touche ???
+        if (m_menuIndex == 2){// TODO: assign a key
 
         }
-        if (m_menuIndex == 4){//touche ???
+        if (m_menuIndex == 4){// TODO: assign a key
 
         }
         if (m_menuIndex == 4){//Exit
@@ -245,16 +245,16 @@ void Menu::update(){
     }
     //Menu Keybinds Player 2
     if(m_menuCurrentItems == m_menuItems[8]){
-        if (m_menuIndex == 0){//touche ???
+        if (m_menuIndex == 0){// TODO: assign a key
             
         }
-        if (m_menuIndex == 1){//touche ???
+        if (m_menuIndex == 1){// TODO: assign a key
 
         }
-        if (m_menuIndex == 2){//touche ???
+        if (m_menuIndex == 2){// TODO: assign a key
 
         }
-        if (m_menuIndex == 4){//touche ???
+        if (m_menuIndex == 4){// TODO: assign a key
 
         }
         if (m_menuIndex == 4){//Exit

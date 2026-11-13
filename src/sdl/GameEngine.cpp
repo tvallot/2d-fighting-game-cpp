@@ -121,12 +121,12 @@ bool GameEngine::init(const char* title, int xpos, int ypos,
 bool GameEngine::loadKeycodeSDL(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Impossible d'ouvrir le fichier " << filename << std::endl;
+        std::cerr << "Cannot open file " << filename << std::endl;
         return false; 
     } else {
         try {
             json jsonData;
-            file >> jsonData; // Lecture des données JSON dans un objet json
+            file >> jsonData; // Parse the JSON data
 
             
             std::map<unsigned int, std::string> playerKeybinds;
@@ -136,7 +136,7 @@ bool GameEngine::loadKeycodeSDL(const std::string& filename) {
                     unsigned int keyCode = std::stoul(action.key());
                     playerKeybinds[keyCode] = action.value();
                 } catch (const std::invalid_argument& e) {
-                    std::cerr << "Clé non convertible en entier : " << e.what() << std::endl;
+                    std::cerr << "Key is not an integer: " << e.what() << std::endl;
                    
                 }
             }
@@ -144,7 +144,7 @@ bool GameEngine::loadKeycodeSDL(const std::string& filename) {
             file.close();
             return true; 
         } catch (json::parse_error& e) {
-            std::cerr << "Erreur de parsing JSON : " << e.what() << std::endl;
+            std::cerr << "JSON parsing error: " << e.what() << std::endl;
             file.close();
             return false; 
         }
@@ -156,8 +156,8 @@ bool GameEngine::loadKeycodeSDL(const std::string& filename) {
 bool GameEngine::loadKeybinds(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Impossible d'ouvrir le fichier " << filename << std::endl;
-        return false; // Indique que le chargement a échoué
+        std::cerr << "Cannot open file " << filename << std::endl;
+        return false; // Loading failed
     } else {
         try {
             json jsonData;
@@ -171,11 +171,11 @@ bool GameEngine::loadKeybinds(const std::string& filename) {
             m_keybinds[player.key()] = playerKeybinds;
         }
             file.close();
-            return true; // Indique que le chargement a réussi
+            return true; // Loading succeeded
         } catch (json::parse_error& e) {
-            std::cerr << "Erreur de parsing JSON : " << e.what() << std::endl;
+            std::cerr << "JSON parsing error: " << e.what() << std::endl;
             file.close();
-            return false; // Indique que le chargement a échoué
+            return false; // Loading failed
         }
     }
 }
@@ -248,10 +248,10 @@ bool GameEngine::isKeyUp(SDL_Event& event, SDL_Keycode key) {
 
 
 std::string GameEngine::returnTouchAction(SDL_Event& event, const std::string& name, const std::string& action) {
-    // Vérifier si le nom du joueur spécifié existe dans vos keybinds
+    // Check that the player exists in the key bindings
     auto playerKeybinds = m_keybinds.find(name);
     if (playerKeybinds != m_keybinds.end()) {
-        // Parcourir les keybinds du joueur pour trouver l'action spécifiée
+        // Look for the action in the player's key bindings
         for (const auto& bind : playerKeybinds->second) {
             if (bind.second == action) {
                 
@@ -273,13 +273,13 @@ bool GameEngine::shouldQuit(SDL_Event& event) {
 
 
 SDL_Keycode GameEngine::returnValueSDL(const std::string& action) {
-    // Parcourir le mapping keycodeSDL pour trouver le SDL_Keycode correspondant à l'action donnée
+    // Look up the SDL_Keycode matching the given action
     for (const auto& [keyCode, sdlAction] : m_keycodeSDL) {
         if (sdlAction == action) {
-            return keyCode; // Retourner le SDL_Keycode correspondant
+            return keyCode; // Matching SDL_Keycode
         }
     }
-    // Si aucune correspondance n'est trouvée, retourner SDLK_UNKNOWN
+    // No match: return SDLK_UNKNOWN
     return SDLK_UNKNOWN;
 }
 
@@ -322,44 +322,44 @@ void GameEngine::setKeybind(const std::string& playerName, const std::string& ac
             
             for (auto& bind : playerKeybinds->second) {
                 if (bind.second == action) {
-                    // Supprimez l'ancienne association avec l'action spécifiée
+                    // Remove the previous binding of this action
                     m_keybinds[playerName].erase(bind.first);
 
-                    // Associez la nouvelle touche à l'action spécifiée
+                    // Bind the new key to the action
                     m_keybinds[playerName][newAction] = action;
 
-                    // Écrivez les modifications dans le fichier JSON
+                    // Save the changes to the JSON file
                     writeKeybindsToFile();
 
-                    // Sortez de la fonction après avoir effectué la mise à jour
+                    // Done
                     return;
                 }
             }
         }
 
-        // Si l'action spécifiée n'a pas été trouvée pour ce joueur, affichez un message d'erreur
-        std::cout << "L'action spécifiée n'existe pas pour ce joueur." << std::endl;
+        // The action does not exist for this player
+        std::cout << "This action does not exist for this player." << std::endl;
     } else {
-        std::cout << "La touche associée à newKey n'a pas été trouvée." << std::endl;
+        std::cout << "No key found for newKey." << std::endl;
     }
 }
 
 void GameEngine::writeKeybindsToFile() {
-    // Ouvrir le fichier en mode écriture
+    // Open the file for writing
     std::ofstream file("./src/core/KeybindFinal.json");
     if (!file.is_open()) {
-        std::cerr << "Impossible d'ouvrir le fichier KeybindFinal.json pour l'écriture." << std::endl;
+        std::cerr << "Cannot open KeybindFinal.json for writing." << std::endl;
         return;
     }
 
-    // Écrire les données JSON dans le fichier
+    // Write the JSON data
     json jsonData;
     for (const auto& player : m_keybinds) {
         jsonData[player.first] = player.second;
     }
     file << std::setw(4) << jsonData << std::endl;
 
-    // Fermer le fichier
+    // Close the file
     file.close();
 }
 
@@ -498,7 +498,7 @@ int GameEngine::getTextureWidth(SDL_Texture* texture) {
     }
 
     int width = 0, height = 0;
-    // Obtenez la largeur et la hauteur de la texture
+    // Get the texture width and height
     if (SDL_QueryTexture(texture, NULL, NULL, &width, &height) != 0) {
         std::cerr << "Failed to get texture size: " << SDL_GetError() << std::endl;
         return 0;
@@ -514,9 +514,9 @@ int GameEngine::getTextureHeight(SDL_Texture* texture) {
     }
 
     int width = 0, height = 0;
-    // Obtenez la largeur et la hauteur de la texture
+    // Get the texture width and height
     if (SDL_QueryTexture(texture, NULL, NULL, &width, &height) != 0) {
-        // Gestion de l'erreur si la requ�te �choue
+        // Query failed
         std::cerr << "Failed to get texture size: " << SDL_GetError() << std::endl;
         return 0;
     }
@@ -643,7 +643,7 @@ void GameEngine::renderFighterHitbox(const Fighter& fighter, const Camera& camer
             collideBoxOutline.h - 2 
         };
 
-        SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 128);  // Vert semi-transparent pour l'interieur
+        SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 128);  // Semi-transparent green fill
         SDL_RenderFillRect(m_renderer, &collideBoxFill);
 
         SDL_Rect hurtBoxOutline = {
@@ -653,12 +653,12 @@ void GameEngine::renderFighterHitbox(const Fighter& fighter, const Camera& camer
             rect.hurtBox.height * m_scaleFactor 
         };
 
-        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 255);  // Bleu opaque pour les bords
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 255);  // Opaque blue outline
         SDL_RenderDrawRect(m_renderer, &hurtBoxOutline);
 
-        // Dessiner l'int�rieur transparent du rectangle
+        // Draw the transparent fill
         SDL_Rect hurtBoxFill = { hurtBoxOutline.x + 1, hurtBoxOutline.y + 1, hurtBoxOutline.w - 2, hurtBoxOutline.h - 2 };
-        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 128);  // Bleu semi-transparent pour l'int�rieur
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 128);  // Semi-transparent blue fill
         SDL_RenderFillRect(m_renderer, &hurtBoxFill);
 
         SDL_Rect hitBoxOutline = {
@@ -668,12 +668,12 @@ void GameEngine::renderFighterHitbox(const Fighter& fighter, const Camera& camer
             rect.hitBox.height * m_scaleFactor 
         };
 
-        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);  // Rouge opaque pour les bords
+        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);  // Opaque red outline
         SDL_RenderDrawRect(m_renderer, &hitBoxOutline);
 
-        // Dessiner l'int�rieur transparent du rectangle
+        // Draw the transparent fill
         SDL_Rect hitBoxFill = { hitBoxOutline.x + 1, hitBoxOutline.y + 1, hitBoxOutline.w - 2, hitBoxOutline.h - 2 };
-        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);  // Rouge semi-transparent pour l'int�rieur
+        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);  // Semi-transparent red fill
         SDL_RenderFillRect(m_renderer, &hitBoxFill);
 
         
@@ -696,7 +696,7 @@ void GameEngine::renderFighterHitbox(const Fighter& fighter, const Camera& camer
             collideBoxOutline.h - 2 
         };
 
-        SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 128);  // Vert semi-transparent pour l'interieur
+        SDL_SetRenderDrawColor(m_renderer, 0, 255, 0, 128);  // Semi-transparent green fill
         SDL_RenderFillRect(m_renderer, &collideBoxFill);
 
         SDL_Rect hurtBoxOutline = {
@@ -706,12 +706,12 @@ void GameEngine::renderFighterHitbox(const Fighter& fighter, const Camera& camer
             rect.hurtBox.height * m_scaleFactor 
         };
 
-        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 255);  // Bleu opaque pour les bords
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 255);  // Opaque blue outline
         SDL_RenderDrawRect(m_renderer, &hurtBoxOutline);
 
-        // Dessiner l'int�rieur transparent du rectangle
+        // Draw the transparent fill
         SDL_Rect hurtBoxFill = { hurtBoxOutline.x + 1, hurtBoxOutline.y + 1, hurtBoxOutline.w - 2, hurtBoxOutline.h - 2 };
-        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 128);  // Bleu semi-transparent pour l'int�rieur
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 255, 128);  // Semi-transparent blue fill
         SDL_RenderFillRect(m_renderer, &hurtBoxFill);
 
         SDL_Rect hitBoxOutline = {
@@ -721,12 +721,12 @@ void GameEngine::renderFighterHitbox(const Fighter& fighter, const Camera& camer
             rect.hitBox.height * m_scaleFactor 
         };
 
-        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);  // Rouge opaque pour les bords
+        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);  // Opaque red outline
         SDL_RenderDrawRect(m_renderer, &hitBoxOutline);
 
-        // Dessiner l'int�rieur transparent du rectangle
+        // Draw the transparent fill
         SDL_Rect hitBoxFill = { hitBoxOutline.x + 1, hitBoxOutline.y + 1, hitBoxOutline.w - 2, hitBoxOutline.h - 2 };
-        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);  // Rouge semi-transparent pour l'int�rieur
+        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 128);  // Semi-transparent red fill
         SDL_RenderFillRect(m_renderer, &hitBoxFill);
 
     }    
@@ -771,8 +771,8 @@ void GameEngine::renderHealthBarSegment(SDL_Texture* texture, const Rectangle& r
 }
 
 void GameEngine::renderOverlay(const Hud& hud, const Fighter& player1, const Fighter& player2, SDL_Texture* texture) {
-    const Rectangle& rectTimerLeft  = hud.getTimerRect(0); // Chiffre de gauche
-    const Rectangle& rectTimerRight = hud.getTimerRect(1); // Chiffre de droite
+    const Rectangle& rectTimerLeft  = hud.getTimerRect(0); // Left digit
+    const Rectangle& rectTimerRight = hud.getTimerRect(1); // Right digit
 
     renderGeneralOverlay(hud, player1, player2, texture);
     renderTimer(rectTimerLeft, rectTimerRight, texture);

@@ -27,7 +27,7 @@ void Game::update(float deltaTime, std::string keycodeF1, std::string keycodeF2,
             m_select.updateEvent(keycodeMenu);
             break;
         case GameState::BattleScene:
-            // Mettre à jour la scène de combat
+            // Update the battle scene
             m_battleScene.update(deltaTime, keycodeF1,keycodeF2);
             break;
         case GameState::ExitGame:

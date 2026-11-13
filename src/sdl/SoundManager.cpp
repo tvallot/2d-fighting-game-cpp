@@ -34,13 +34,13 @@ bool SoundManager::initialize() {
 
 // Close SDL_mixer and release resources
 void SoundManager::close() {
-    // Libérer toutes les instances de musique chargées
+    // Free every loaded music
     for (Mix_Music* music : m_loadedMusic) {
         Mix_FreeMusic(music);
     }
-    m_loadedMusic.clear(); // Vider le vecteur
+    m_loadedMusic.clear(); // Empty the list
 
-    // Si SoundManager est initialisé, fermez SDL_mixer
+    // Close SDL_mixer if it was initialized
     if (m_initialized) {
         Mix_CloseAudio();
         m_initialized = false;
@@ -62,7 +62,7 @@ Mix_Music* SoundManager::loadMusic(const char* filePath) {
         std::cerr << "Failed to load music! SDL_mixer Error: " 
             << Mix_GetError() << std::endl;
     } else {
-        // Ajouter la musique chargée au vecteur
+        // Keep the loaded music
         m_loadedMusic.push_back(music);
     }
 

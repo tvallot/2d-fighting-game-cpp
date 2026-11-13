@@ -55,31 +55,31 @@ WinTxt::~WinTxt(){
 //movements
 void WinTxt::moveRight(Player& p) {
      if(m_terrain_ground[p.x + 1] != '|' && m_terrain_ground[p.x + 1] != m_player1.p && m_terrain_ground[p.x + 1] != m_player2.p){
-          m_terrain_ground[p.x] = ' '; // Efface la position actuelle du joueur
-          p.x = p.x + 1; // Met à jour la position du joueur
-          m_terrain_ground[p.x] = p.p; // Met à jour la position dans terrain_ground
+          m_terrain_ground[p.x] = ' '; // Clear the player's current position
+          p.x = p.x + 1; // Update the player's position
+          m_terrain_ground[p.x] = p.p; // Draw the player at the new position
      }
 }
 
 
 void WinTxt::moveLeft(Player& p){
      if(m_terrain_ground[p.x - 1] != '|' && m_terrain_ground[p.x - 1] != m_player1.p && m_terrain_ground[p.x - 1] != m_player2.p){
-          m_terrain_ground[p.x] = ' '; // Efface la position actuelle du joueur
-          p.x = p.x - 1; // Met à jour la position du joueur
-          m_terrain_ground[p.x] = p.p; // Met à jour la position dans terrain_ground
+          m_terrain_ground[p.x] = ' '; // Clear the player's current position
+          p.x = p.x - 1; // Update the player's position
+          m_terrain_ground[p.x] = p.p; // Draw the player at the new position
      }
 }
 
 void WinTxt::jumpUp(Player& p){
-     m_terrain_ground[p.x] = ' '; // Efface la position actuelle du joueur
-     p.y = p.x; // Met à jour la position du joueur
-     m_terrain_jump[p.y] = p.p; // Met à jour la position dans terrain_ground
+     m_terrain_ground[p.x] = ' '; // Clear the player's current position
+     p.y = p.x; // Update the player's position
+     m_terrain_jump[p.y] = p.p; // Draw the player at the new position
 }
 
 void WinTxt::jumpDown(Player& p){
-     m_terrain_jump[p.y] = ' '; // Efface la position actuelle du joueur
-     p.y = 0; // Met à jour la position du joueur
-     m_terrain_ground[p.x] = p.p; // Met à jour la position dans terrain_ground
+     m_terrain_jump[p.y] = ' '; // Clear the player's current position
+     p.y = 0; // Update the player's position
+     m_terrain_ground[p.x] = p.p; // Draw the player at the new position
 }
 
 void WinTxt::crouch(Player& p){
@@ -145,15 +145,15 @@ void WinTxt::updateHealthP2(){
 void WinTxt::updateRound(){
      m_round = m_round + 1;
 
-     m_terrain_ground[m_player1.x] = ' '; // Efface la position actuelle du joueur
+     m_terrain_ground[m_player1.x] = ' '; // Clear the player's current position
      m_player1.x = 26;
      m_player1.h = 150;
-     m_terrain_ground[m_player1.x] = m_player1.p; // Met à jour la position dans terrain_ground
+     m_terrain_ground[m_player1.x] = m_player1.p; // Draw the player at the new position
 
-     m_terrain_ground[m_player2.x] = ' '; // Efface la position actuelle du joueur
+     m_terrain_ground[m_player2.x] = ' '; // Clear the player's current position
      m_player2.x = 45;
      m_player2.h = 150;
-     m_terrain_ground[m_player2.x] = m_player2.p; // Met à jour la position dans terrain_ground
+     m_terrain_ground[m_player2.x] = m_player2.p; // Draw the player at the new position
 
 }
 

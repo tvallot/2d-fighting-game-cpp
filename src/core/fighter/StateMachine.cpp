@@ -2,7 +2,7 @@
 
 StateMachine::StateMachine() {
         m_currentState = "Stance";
-        // Initialisation des transitions
+        // Allowed transitions
         m_transitions["Stance"] = {
             "Stance",
             "Crouch",

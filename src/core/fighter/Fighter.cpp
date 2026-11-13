@@ -6,22 +6,22 @@ using json = nlohmann::json;
 Fighter::Fighter() : 
     m_name(),
     m_position(),
-    m_scale(0), // Initialiser scale avec une valeur par défaut, par exemple 0
-    m_imagePath(nullptr), // Initialiser avec nullptr ou une chaîne vide selon votre intention
-    m_velocity(0), // Initialiser avec une valeur par défaut
+    m_scale(0), // Default value
+    m_imagePath(nullptr), // Set in init()
+    m_velocity(0), // Default value
     m_stateMachine(),
-    m_keycode(0), // Initialiser avec une valeur par défaut
-    m_maxHealth(1000), // Initialiser avec une valeur par défaut
-    m_currentHealth(1000), // Initialiser avec une valeur par défaut
-    m_damage(0), // Initialiser avec une valeur par défaut
+    m_keycode(0), // Default value
+    m_maxHealth(1000), // Default value
+    m_currentHealth(1000), // Default value
+    m_damage(0), // Default value
     m_spritesSheet(nullptr),
     m_currentSpriteRect(nullptr),
     m_animationFrame(),
-    m_currentFrame(0), // Initialiser avec une valeur par défaut
-    m_maxFrame(0), // Initialiser avec une valeur par défaut
-    m_frameTime(0), // Initialiser avec une valeur par défaut
+    m_currentFrame(0), // Default value
+    m_maxFrame(0), // Default value
+    m_frameTime(0), // Default value
     m_isAnimationPlaying(false),
-    m_playerId(false) // Initialiser avec une valeur par défaut
+    m_playerId(false) // Default value
 {
     
 }
@@ -1762,7 +1762,7 @@ void Fighter::init(std::string fighterName) {
 
 
 void Fighter::initializeAnimationMap() {
-    // Initialisez la map avec les données appropriées pour chaque touche et chaque joueur.
+    // Fill the map with the animation of each key, for each player.
 
     // Stance
     animationMap["Stance"][true] = std::make_pair("Stance", std::make_pair(0, std::make_pair(11, 11)));
@@ -1852,11 +1852,11 @@ void Fighter::update(float deltaTime, bool playerId, std::string keycode) {
         else {
             ++m_currentFrame;
         }
-        // Reinitialisez le temps pour la prochaine frame
+        // Reset the timer for the next frame
         m_frameTime -= m_currentSpriteRect->spriteFrameTime;
     }    
 
-    // A changer (on n'utilise plus reverse)
+    // TODO: clean up (reverse is no longer used)
     if(m_reversed) {
         if(m_position.x < m_opponent->getPosition().x) {
             m_reversed = !m_reversed;
@@ -2046,7 +2046,7 @@ const BoundingBox& Fighter::getCollideBox() const {
 }
 
 const Vector2D& Fighter::getPosition() const{
-    return m_position; // Retourner la copie temporaire
+    return m_position; // Return a copy
 }
 
 const Vector2D& Fighter::getCorrector() const {

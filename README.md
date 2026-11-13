@@ -1,10 +1,10 @@
-# Kastagne: a 2D fighting game engine in C++ / SDL2
+# Kastagne: a 2D fighting game in C++ / SDL2
 
-[![CI](https://github.com/tvallot/kastagne-2d-fighting-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/tvallot/kastagne-2d-fighting-engine/actions/workflows/ci.yml)
+[![CI](https://github.com/tvallot/2d-fighting-game-cpp/actions/workflows/ci.yml/badge.svg)](https://github.com/tvallot/2d-fighting-game-cpp/actions/workflows/ci.yml)
 
 A two-player, local versus fighting game written from scratch in C++ with SDL2: sprite-atlas animation, a state machine per fighter, frame-by-frame collision / hit / hurt boxes, a camera that follows both players, a HUD and a full menu flow.
 
-University project (Bachelor's in Computer Science, Université Claude Bernard Lyon 1, 2024), built by a team of three: **Alexandre Delort, Gaspard Retter and Tanguy Vallot**.
+Second-year project of the Bachelor's in Computer Science (Université Claude Bernard Lyon 1, 2024), built by a team of three: **Alexandre Delort, Gaspard Retter and Tanguy Vallot**.
 
 <p align="center">
   <img src="docs/screenshots/hitboxes.jpg" alt="Debug view: hurtboxes in blue, an active hitbox in red" width="48%">

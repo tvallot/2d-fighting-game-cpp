@@ -54,26 +54,26 @@ struct RectangleFromAtlas
 class Fighter
 {
 private:
-    // Données membres liées à la description générale du combattant
+    // General description of the fighter
     std::string m_name;
     Vector2D m_position;
     int m_direction;
     int m_scale;
     const char* m_imagePath;
 
-    // Données membres liées aux mouvements et à l'état du combattant
+    // Movement and state of the fighter
     float m_velocity;
     StateMachine m_stateMachine;
     int m_keycode;
     bool m_reversed;
     bool m_hasCollideWithOpponent;
 
-    // Données membres liées à la santé et aux dégâts du combattant
+    // Health and damage
     int m_maxHealth;
     int m_currentHealth;
     int m_damage;
 
-    // Données membres liées à l'animation et aux sprites
+    // Animation and sprites
     std::unique_ptr<std::unordered_map<std::string, RectangleFromAtlas>> m_spritesSheet;
     mutable const RectangleFromAtlas* m_currentSpriteRect;
     std::string m_animationFrame;
@@ -82,7 +82,7 @@ private:
     std::uint64_t m_frameTime;
     bool m_isAnimationPlaying;
 
-    // Données membres liées aux keybinds
+    // Key bindings
     std::map<std::string, std::map<bool, std::pair<std::string, std::pair<int, std::pair<int, int>>>>> animationMap;
     bool m_playerId;
 
